@@ -43,4 +43,4 @@ mvn exec:exec@run-the-tests -Dexec.classpathScope=test
 **For full instructions on running this project, take our
 [Selenium Java Basic tutorial](https://applitools.com/tutorials/quickstart/web/selenium/java/basic)!**
 
-Updated
+Updated-
