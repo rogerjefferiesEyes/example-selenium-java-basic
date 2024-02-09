@@ -51,6 +51,18 @@ public class AcmeBankTests {
         return eyes;
     }
 
+    private static WebDriver getDriver(){
+        WebDriver driver = null;
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--disable-gpu");
+        if(System.getenv("GITHUB_ACTIONS") != null) {
+            options.addArguments("--headless");
+        }
+        driver = new ChromeDriver(options);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        return driver;
+    }
+
     private static void testAcmeBankPage(){
 
         Eyes eyes = null;
@@ -58,9 +70,7 @@ public class AcmeBankTests {
 
         try {
             eyes = getEyes();
-            ChromeOptions options = new ChromeOptions();
-            driver = new ChromeDriver(options);
-            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+            driver = getDriver();
 
             // Start Applitools Visual AI Test
             eyes.open(driver,"ACME Bank", "Selenium Java Basic: Quickstart", new RectangleSize(1200, 600));
@@ -102,9 +112,7 @@ public class AcmeBankTests {
 
         try {
             eyes = getEyes();
-            ChromeOptions options = new ChromeOptions();
-            driver = new ChromeDriver(options);
-            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+            driver = getDriver();
 
             // Start Applitools Visual AI Test
             eyes.open(driver,"ACME Bank", "Selenium Java Basic: Quickstart", new RectangleSize(1200, 600));
