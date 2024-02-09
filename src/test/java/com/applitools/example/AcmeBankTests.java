@@ -56,7 +56,7 @@ public class AcmeBankTests {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-gpu");
         String headless = System.getenv("HEADLESS");
-        if(headless != null && headless == "true") {
+        if(headless != null) {
             options.addArguments("--headless");
         }
         driver = new ChromeDriver(options);
