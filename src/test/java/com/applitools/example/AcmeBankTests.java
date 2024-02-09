@@ -25,6 +25,8 @@ public class AcmeBankTests {
     private static EyesRunner runner;
     private static void setup(){
         BATCH = new BatchInfo("Selenium Java Basic Quickstart");
+
+        // Configure Applitools SDK to run on the Ultrafast Grid
         runner = new VisualGridRunner(new RunnerOptions().testConcurrency(5));
     }
 
@@ -35,7 +37,6 @@ public class AcmeBankTests {
 
     private static Eyes getEyes(){
         Eyes eyes = null;
-        // Configure Applitools SDK to run on the Ultrafast Grid
         eyes = new Eyes(runner);
         Configuration config = eyes.getConfiguration();
         config.setApiKey(System.getenv("APPLITOOLS_API_KEY"));
@@ -51,6 +52,19 @@ public class AcmeBankTests {
         return eyes;
     }
 
+    private static WebDriver getDriver(){
+        WebDriver driver = null;
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--disable-gpu");
+        String headless = System.getenv("HEADLESS");
+        if(headless != null) {
+            options.addArguments("--headless");
+        }
+        driver = new ChromeDriver(options);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        return driver;
+    }
+
     private static void testAcmeBankPage(){
 
         Eyes eyes = null;
@@ -58,9 +72,7 @@ public class AcmeBankTests {
 
         try {
             eyes = getEyes();
-            ChromeOptions options = new ChromeOptions();
-            driver = new ChromeDriver(options);
-            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+            driver = getDriver();
 
             // Start Applitools Visual AI Test
             eyes.open(driver,"ACME Bank", "Selenium Java Basic: Quickstart", new RectangleSize(1200, 600));
@@ -76,11 +88,6 @@ public class AcmeBankTests {
             // Full Page - Visual AI Assertion
             eyes.check(
                     Target.window().fully().withName("Main page")
-                    // Uncomment to apply Layout regions and have test pass
-                /* .layout(
-                    By.cssSelector(".dashboardOverview_accountBalances__3TUPB"),
-                    By.cssSelector(".dashboardTable_dbTable___R5Du")
-                ) */
             );
 
             // End Applitools Visual AI Test
@@ -102,9 +109,7 @@ public class AcmeBankTests {
 
         try {
             eyes = getEyes();
-            ChromeOptions options = new ChromeOptions();
-            driver = new ChromeDriver(options);
-            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+            driver = getDriver();
 
             // Start Applitools Visual AI Test
             eyes.open(driver,"ACME Bank", "Selenium Java Basic: Quickstart", new RectangleSize(1200, 600));
