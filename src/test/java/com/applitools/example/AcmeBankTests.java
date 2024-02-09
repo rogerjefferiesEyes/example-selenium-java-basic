@@ -25,6 +25,8 @@ public class AcmeBankTests {
     private static EyesRunner runner;
     private static void setup(){
         BATCH = new BatchInfo("Selenium Java Basic Quickstart");
+
+        // Configure Applitools SDK to run on the Ultrafast Grid
         runner = new VisualGridRunner(new RunnerOptions().testConcurrency(5));
     }
 
@@ -35,7 +37,6 @@ public class AcmeBankTests {
 
     private static Eyes getEyes(){
         Eyes eyes = null;
-        // Configure Applitools SDK to run on the Ultrafast Grid
         eyes = new Eyes(runner);
         Configuration config = eyes.getConfiguration();
         config.setApiKey(System.getenv("APPLITOOLS_API_KEY"));
@@ -87,11 +88,6 @@ public class AcmeBankTests {
             // Full Page - Visual AI Assertion
             eyes.check(
                     Target.window().fully().withName("Main page")
-                    // Uncomment to apply Layout regions and have test pass
-                /* .layout(
-                    By.cssSelector(".dashboardOverview_accountBalances__3TUPB"),
-                    By.cssSelector(".dashboardTable_dbTable___R5Du")
-                ) */
             );
 
             // End Applitools Visual AI Test
