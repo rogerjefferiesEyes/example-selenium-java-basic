@@ -43,7 +43,7 @@
                         <configuration>
                             <executable>java</executable>
                             <arguments>
-                                <argument>-cp</argument>
+                                <argument>-cp -ea</argument>
                                 <classpath/>
                                 <argument>com.applitools.example.AcmeBankTests</argument>
                             </arguments>
