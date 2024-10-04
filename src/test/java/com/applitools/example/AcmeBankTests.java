@@ -1,11 +1,6 @@
 package com.applitools.example;
-import com.applitools.eyes.BatchInfo;
-import com.applitools.eyes.EyesRunner;
-import com.applitools.eyes.RectangleSize;
-import com.applitools.eyes.TestResultsSummary;
-import com.applitools.eyes.selenium.BrowserType;
-import com.applitools.eyes.selenium.Configuration;
-import com.applitools.eyes.selenium.Eyes;
+import com.applitools.eyes.*;
+import com.applitools.eyes.selenium.*;
 import com.applitools.eyes.selenium.fluent.Target;
 import com.applitools.eyes.visualgrid.model.ChromeEmulationInfo;
 import com.applitools.eyes.visualgrid.model.DesktopBrowserInfo;
@@ -25,45 +20,59 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class AcmeBankTests {
 
     private static BatchInfo BATCH;
     private static EyesRunner runner;
 
-    private static boolean USE_SELF_HEALING_EXECUTION_CLOUD = true;
+    private static final boolean USE_ULTRAFAST_GRID = false;
 
-    private static void setup(){
-        BATCH = new BatchInfo("Selenium Java Basic Quickstart");
+    private static final boolean USE_SELF_HEALING_EXECUTION_CLOUD = false;
 
-        // Configure Applitools SDK to run on the Ultrafast Grid
-        runner = new VisualGridRunner(new RunnerOptions().testConcurrency(5));
+    private void setup(){
+        if(BATCH == null) {
+            BATCH = new BatchInfo("Selenium Java Basic Quickstart");
+        }
+
+        if(runner == null){
+            if(USE_ULTRAFAST_GRID) {
+                // Configure Applitools SDK to run on the Ultrafast Grid
+                runner = new VisualGridRunner(new RunnerOptions().testConcurrency(5));
+            } else {
+                runner = new ClassicRunner();
+            }
+        }
     }
 
-    private static void tearDown(){
+    private void tearDown(){
         TestResultsSummary allTestResults = runner.getAllTestResults(false);
         System.out.println(allTestResults);
     }
 
-    private static Eyes getEyes(){
-        Eyes eyes = null;
-        eyes = new Eyes(runner);
+    private Eyes getEyes(){
+        Eyes eyes = new Eyes(runner);
         Configuration config = eyes.getConfiguration();
         config.setServerUrl("https://eyesapi.applitools.com");
         config.setApiKey(System.getenv("APPLITOOLS_API_KEY"));
+        config.setStitchMode(StitchMode.CSS);
         config.setBatch(BATCH);
-        config.addBrowsers(
-                new DesktopBrowserInfo(800, 1024, BrowserType.CHROME),
-                new DesktopBrowserInfo(1600, 1200, BrowserType.FIREFOX),
-                new DesktopBrowserInfo(1024, 768, BrowserType.SAFARI),
-                new ChromeEmulationInfo(DeviceName.Pixel_2, ScreenOrientation.PORTRAIT),
-                new ChromeEmulationInfo(DeviceName.Nexus_10, ScreenOrientation.LANDSCAPE)
-        );
+        if(USE_ULTRAFAST_GRID) {
+            config.addBrowsers(
+                    new DesktopBrowserInfo(800, 1024, BrowserType.CHROME),
+                    new DesktopBrowserInfo(1600, 1200, BrowserType.FIREFOX),
+                    new DesktopBrowserInfo(1024, 768, BrowserType.SAFARI),
+                    new ChromeEmulationInfo(DeviceName.Pixel_2, ScreenOrientation.PORTRAIT),
+                    new ChromeEmulationInfo(DeviceName.Nexus_10, ScreenOrientation.LANDSCAPE)
+            );
+            config.setLayoutBreakpoints(true);
+        }
         eyes.setConfiguration(config);
         return eyes;
     }
 
-    private static WebDriver getDriver() throws MalformedURLException {
+    private WebDriver getDriver() throws MalformedURLException {
         WebDriver driver = null;
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-gpu");
@@ -85,7 +94,7 @@ public class AcmeBankTests {
         return driver;
     }
 
-    private static void testAcmeBankPage(){
+    private void testAcmeBankPage(){
 
         Eyes eyes = null;
         WebDriver driver = null;
@@ -95,7 +104,12 @@ public class AcmeBankTests {
             driver = getDriver();
 
             // Start Applitools Visual AI Test
-            eyes.open(driver,"ACME Bank", new Object(){}.getClass().getEnclosingMethod().getName(), new RectangleSize(1200, 600));
+            eyes.open(
+                    driver,
+                    "ACME Bank",
+                    new Object(){}.getClass().getEnclosingMethod().getName(),
+                    new RectangleSize(1200, 600)
+            );
             driver.get("https://sandbox.applitools.com/bank?layoutAlgo=true");
 
             // Full Page - Visual AI Assertion
@@ -123,7 +137,7 @@ public class AcmeBankTests {
         }
     }
 
-    private static void testAcmeBankLayout(){
+    private void testAcmeBankLayout(){
         Eyes eyes = null;
         WebDriver driver = null;
 
@@ -132,7 +146,12 @@ public class AcmeBankTests {
             driver = getDriver();
 
             // Start Applitools Visual AI Test
-            eyes.open(driver,"ACME Bank", new Object(){}.getClass().getEnclosingMethod().getName(), new RectangleSize(1200, 600));
+            eyes.open(
+                    driver,
+                    "ACME Bank",
+                    new Object(){}.getClass().getEnclosingMethod().getName(),
+                    new RectangleSize(1200, 600)
+            );
             driver.get("https://sandbox.applitools.com/bank?layoutAlgo=true");
 
             // Full Page - Visual AI Assertion
@@ -165,7 +184,42 @@ public class AcmeBankTests {
         }
     }
 
-    private static void testAcmeBankSelfHealing(){
+    private void testPrimerPrimitivesReadMe(){
+        Eyes eyes = null;
+        WebDriver driver = null;
+
+        try {
+            eyes = getEyes();
+            driver = getDriver();
+
+            eyes.setBaselineEnvName("README_701");
+
+            // Start Applitools Visual AI Test
+            eyes.open(
+                    driver,
+                    "Primer Primitives (Community)",
+                    "README",
+                    new RectangleSize(701, 1477)
+            );
+            driver.get("http://127.0.0.1:8081/");
+
+            // Full Page - Visual AI Assertion
+            eyes.check(Target.window().fully().matchLevel(MatchLevel.LAYOUT));
+
+            // End Applitools Visual AI Test
+            eyes.closeAsync();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            if (eyes != null)
+                eyes.abortAsync();
+        } finally {
+            if (driver != null)
+                driver.quit();
+        }
+    }
+
+    private void testAcmeBankSelfHealing(){
         Eyes eyes = null;
         WebDriver driver = null;
 
@@ -174,7 +228,11 @@ public class AcmeBankTests {
             driver = getDriver();
 
             // Start Applitools Visual AI Test
-            eyes.open(driver,"ACME Bank", new Object(){}.getClass().getEnclosingMethod().getName(), new RectangleSize(1200, 600));
+            eyes.open(
+                    driver,"ACME Bank",
+                    new Object(){}.getClass().getEnclosingMethod().getName(),
+                    new RectangleSize(1200, 600)
+            );
             driver.get("https://sandbox.applitools.com/bank?layoutAlgo=true");
 
             // Full Page - Visual AI Assertion
@@ -184,8 +242,8 @@ public class AcmeBankTests {
             driver.findElement(By.id("password")).sendKeys("password");
 
             // Uncomment to simulate selector/locator change
-            JavascriptExecutor jse = (JavascriptExecutor) driver;
-            jse.executeScript("document.querySelector('#log-in').setAttribute('id', 'newButtonId');");
+//            JavascriptExecutor jse = (JavascriptExecutor) driver;
+//            jse.executeScript("document.querySelector('#log-in').setAttribute('id', 'newButtonId');");
 
             driver.findElement(By.id("log-in")).click();
 
@@ -211,7 +269,7 @@ public class AcmeBankTests {
         }
     }
 
-    private static void testNonEyes(){
+    private void testNonEyes(){
         WebDriver driver = null;
         try {
             driver = getDriver();
@@ -231,18 +289,24 @@ public class AcmeBankTests {
 
             driver.get("https://sandbox.applitools.com/bank?layoutAlgo=true");
 
-            assert driver.findElement(By.cssSelector("h4.loginForm_loginFormHeader__fiIRG")).getText() == "Login Form";
+            assert Objects.equals(
+                    driver.findElement(By.cssSelector("h4.loginForm_loginFormHeader__fiIRG")).getText(),
+                    "Login Form"
+            );
 
             driver.findElement(By.id("username")).sendKeys("user");
             driver.findElement(By.id("password")).sendKeys("password");
 
             // Uncomment to simulate selector/locator change
-            //JavascriptExecutor jse = (JavascriptExecutor) driver;
-            //jse.executeScript("document.querySelector('#log-in').setAttribute('id', 'newButtonId');");
+//            JavascriptExecutor jse = (JavascriptExecutor) driver;
+//            jse.executeScript("document.querySelector('#log-in').setAttribute('id', 'newButtonId');");
 
             driver.findElement(By.id("log-in")).click();
 
-            assert driver.findElement(By.cssSelector("div.dashboardSideBar_dbSideNavUserName__922dl")).getText() == "Jack Gomez";
+            assert Objects.equals(
+                    driver.findElement(By.cssSelector("div.dashboardSideBar_dbSideNavUserName__922dl")).getText(),
+                    "Jack Gomez"
+            );
 
             ((JavascriptExecutor) driver).executeScript("applitools:endTest", new HashMap<String, Object>() {{
                 put("status", "Passed");
@@ -256,18 +320,22 @@ public class AcmeBankTests {
         }
     }
     public static void main(String [] args) {
+        AcmeBankTests acmeBankTests = new AcmeBankTests();
         try{
-            setup();
-            testAcmeBankPage();
-            testAcmeBankLayout();
+            acmeBankTests.setup();
+//            acmeBankTests.testAcmeBankPage();
+//            acmeBankTests.testAcmeBankLayout();
+            acmeBankTests.testPrimerPrimitivesReadMe();
 
-            testAcmeBankSelfHealing();
-            testNonEyes();
+            if(USE_SELF_HEALING_EXECUTION_CLOUD) {
+                acmeBankTests.testAcmeBankSelfHealing();
+                acmeBankTests.testNonEyes();
+            }
         }catch(Exception e){
             System.err.println("Error during test execution: " + e.getMessage());
             e.printStackTrace();
         }finally {
-            tearDown();
+            acmeBankTests.tearDown();
             System.exit(0);
         }
 
