@@ -323,9 +323,9 @@ public class AcmeBankTests {
         AcmeBankTests acmeBankTests = new AcmeBankTests();
         try{
             acmeBankTests.setup();
-//            acmeBankTests.testAcmeBankPage();
-//            acmeBankTests.testAcmeBankLayout();
-            acmeBankTests.testPrimerPrimitivesReadMe();
+            acmeBankTests.testAcmeBankPage();
+            acmeBankTests.testAcmeBankLayout();
+//            acmeBankTests.testPrimerPrimitivesReadMe();
 
             if(USE_SELF_HEALING_EXECUTION_CLOUD) {
                 acmeBankTests.testAcmeBankSelfHealing();
