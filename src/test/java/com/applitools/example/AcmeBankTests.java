@@ -27,7 +27,7 @@ public class AcmeBankTests {
     private static BatchInfo BATCH;
     private static EyesRunner runner;
 
-    private static final boolean USE_ULTRAFAST_GRID = false;
+    private static final boolean USE_ULTRAFAST_GRID = true;
 
     private static final boolean USE_SELF_HEALING_EXECUTION_CLOUD = false;
 
@@ -77,7 +77,7 @@ public class AcmeBankTests {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-gpu");
         String headless = System.getenv("HEADLESS");
-        if(headless != null) {
+        if(headless != null || USE_ULTRAFAST_GRID) {
             options.addArguments("--headless");
         }
         if(USE_SELF_HEALING_EXECUTION_CLOUD){
@@ -111,6 +111,7 @@ public class AcmeBankTests {
                     new RectangleSize(1200, 600)
             );
             driver.get("https://sandbox.applitools.com/bank?layoutAlgo=true");
+
 
             // Full Page - Visual AI Assertion
             eyes.check(Target.window().fully().withName("Login page"));
@@ -242,8 +243,8 @@ public class AcmeBankTests {
             driver.findElement(By.id("password")).sendKeys("password");
 
             // Uncomment to simulate selector/locator change
-//            JavascriptExecutor jse = (JavascriptExecutor) driver;
-//            jse.executeScript("document.querySelector('#log-in').setAttribute('id', 'newButtonId');");
+            JavascriptExecutor jse = (JavascriptExecutor) driver;
+            jse.executeScript("document.querySelector('#log-in').setAttribute('id', 'newButtonId');");
 
             driver.findElement(By.id("log-in")).click();
 
@@ -324,7 +325,7 @@ public class AcmeBankTests {
         try{
             acmeBankTests.setup();
             acmeBankTests.testAcmeBankPage();
-            acmeBankTests.testAcmeBankLayout();
+//            acmeBankTests.testAcmeBankLayout();
 //            acmeBankTests.testPrimerPrimitivesReadMe();
 
             if(USE_SELF_HEALING_EXECUTION_CLOUD) {

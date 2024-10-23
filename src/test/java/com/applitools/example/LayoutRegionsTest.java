@@ -10,6 +10,7 @@ import com.applitools.eyes.visualgrid.model.ScreenOrientation;
 import com.applitools.eyes.visualgrid.services.RunnerOptions;
 import com.applitools.eyes.visualgrid.services.VisualGridRunner;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -62,12 +63,14 @@ public class LayoutRegionsTest {
             );
             driver.get("https://sandbox.applitools.com/bank?layoutAlgo=true");
 
+
             // Full Page - Visual AI Assertion
             eyes.check(Target.window().fully().withName("Login page").scrollRootElement(By.tagName("html")));
 
             driver.findElement(By.id("username")).sendKeys("user");
             driver.findElement(By.id("password")).sendKeys("password");
             driver.findElement(By.id("log-in")).click();
+
 
             // Full Page - Visual AI Assertion
             eyes.check(

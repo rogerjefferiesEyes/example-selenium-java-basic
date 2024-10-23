@@ -14,17 +14,16 @@
     </properties>
 
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/com.applitools/eyes-selenium-java5 -->
         <dependency>
             <groupId>com.applitools</groupId>
             <artifactId>eyes-selenium-java5</artifactId>
             <version>5.69.2</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <version>4.10.0</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
