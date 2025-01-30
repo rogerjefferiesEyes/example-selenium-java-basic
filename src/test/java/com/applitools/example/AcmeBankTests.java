@@ -27,7 +27,7 @@ public class AcmeBankTests {
     private static BatchInfo BATCH;
     private static EyesRunner runner;
 
-    private static final boolean USE_ULTRAFAST_GRID = true;
+    private static final boolean USE_ULTRAFAST_GRID = false;
 
     private static final boolean USE_SELF_HEALING_EXECUTION_CLOUD = false;
 
@@ -56,12 +56,15 @@ public class AcmeBankTests {
         Configuration config = eyes.getConfiguration();
         config.setServerUrl("https://eyesapi.applitools.com");
         config.setApiKey(System.getenv("APPLITOOLS_API_KEY"));
+        config.setMatchLevel(MatchLevel.DYNAMIC);
+        config.setUseDom(true);
+        config.setSendDom(true);
         config.setStitchMode(StitchMode.CSS);
         config.setBatch(BATCH);
         if(USE_ULTRAFAST_GRID) {
             config.addBrowsers(
-                    new DesktopBrowserInfo(800, 1024, BrowserType.CHROME),
-                    new DesktopBrowserInfo(1600, 1200, BrowserType.FIREFOX),
+                    new DesktopBrowserInfo(800, 600, BrowserType.CHROME),
+                    new DesktopBrowserInfo(1024, 768, BrowserType.FIREFOX),
                     new DesktopBrowserInfo(1024, 768, BrowserType.SAFARI),
                     new ChromeEmulationInfo(DeviceName.Pixel_2, ScreenOrientation.PORTRAIT),
                     new ChromeEmulationInfo(DeviceName.Nexus_10, ScreenOrientation.LANDSCAPE)
@@ -156,20 +159,27 @@ public class AcmeBankTests {
             driver.get("https://sandbox.applitools.com/bank?layoutAlgo=true");
 
             // Full Page - Visual AI Assertion
-            eyes.check(Target.window().fully().withName("Login page"));
+            eyes.check(Target.window().fully().withName("Login page").stitchMode(StitchMode.CSS));
 
             driver.findElement(By.id("username")).sendKeys("user");
             driver.findElement(By.id("password")).sendKeys("password");
 
             driver.findElement(By.id("log-in")).click();
 
+            Thread.sleep(2000);
+
             // Full Page - Visual AI Assertion
             eyes.check(
-                    Target.window().fully().withName("Main page")
-                            .layout(
-                                    By.cssSelector(".dashboardOverview_accountBalances__3TUPB"),
-                                    By.cssSelector(".dashboardTable_dbTable___R5Du")
-                            )
+                    Target.window().fully().withName("Main page").waitBeforeCapture(2000));
+
+            eyes.check(
+                    Target.window().dynamic(By.cssSelector(".dashboardOverview_accountBalances__3TUPB"), DynamicTextType.TextField,
+                    DynamicTextType.Number,
+                    DynamicTextType.Email,
+                    DynamicTextType.Date,
+                    DynamicTextType.Link,
+                    DynamicTextType.Currency)
+
             );
 
             // End Applitools Visual AI Test
@@ -237,14 +247,14 @@ public class AcmeBankTests {
             driver.get("https://sandbox.applitools.com/bank?layoutAlgo=true");
 
             // Full Page - Visual AI Assertion
-            eyes.check(Target.window().fully().withName("Login page"));
+            eyes.check(Target.window().fully().withName("Login page").dynamic());
 
             driver.findElement(By.id("username")).sendKeys("user");
             driver.findElement(By.id("password")).sendKeys("password");
 
             // Uncomment to simulate selector/locator change
-            JavascriptExecutor jse = (JavascriptExecutor) driver;
-            jse.executeScript("document.querySelector('#log-in').setAttribute('id', 'newButtonId');");
+//            JavascriptExecutor jse = (JavascriptExecutor) driver;
+//            jse.executeScript("document.querySelector('#log-in').setAttribute('id', 'newButtonId');");
 
             driver.findElement(By.id("log-in")).click();
 
@@ -324,8 +334,8 @@ public class AcmeBankTests {
         AcmeBankTests acmeBankTests = new AcmeBankTests();
         try{
             acmeBankTests.setup();
-            acmeBankTests.testAcmeBankPage();
-//            acmeBankTests.testAcmeBankLayout();
+//            acmeBankTests.testAcmeBankPage();
+            acmeBankTests.testAcmeBankLayout();
 //            acmeBankTests.testPrimerPrimitivesReadMe();
 
             if(USE_SELF_HEALING_EXECUTION_CLOUD) {
