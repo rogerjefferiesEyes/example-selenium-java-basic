@@ -25,7 +25,7 @@ public class EyesSeleniumAccessibilityTest {
     private static final BatchInfo BATCH = new BatchInfo("Selenium Java Basic - Accessibility");
     private static final boolean USE_ULTRAFAST_GRID = true;
 
-    private EyesRunner runner = null;
+    private static EyesRunner runner = null;
     private Eyes eyes = null;
     private WebDriver driver = null;
 
@@ -61,6 +61,7 @@ public class EyesSeleniumAccessibilityTest {
 
         eyes = new Eyes(runner);
         eyes.setConfiguration(config);
+        eyes.setApiKey(System.getenv("APPLITOOLS_API_KEY"));
 
         ChromeOptions options = new ChromeOptions();
         String headless = System.getenv("HEADLESS");
