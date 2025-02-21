@@ -80,7 +80,7 @@ public class AcmeBankTests {
         options.addArguments("--disable-gpu");
         String headless = System.getenv("HEADLESS");
         if(headless != null || USE_ULTRAFAST_GRID) {
-            options.addArguments("--headless");
+            options.addArguments("--headless=new");
         }
         if(USE_SELF_HEALING_EXECUTION_CLOUD){
             DesiredCapabilities caps = new DesiredCapabilities();
