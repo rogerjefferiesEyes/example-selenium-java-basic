@@ -2,10 +2,7 @@ package com.applitools.example;
 import com.applitools.eyes.*;
 import com.applitools.eyes.selenium.*;
 import com.applitools.eyes.selenium.fluent.Target;
-import com.applitools.eyes.visualgrid.model.ChromeEmulationInfo;
-import com.applitools.eyes.visualgrid.model.DesktopBrowserInfo;
-import com.applitools.eyes.visualgrid.model.DeviceName;
-import com.applitools.eyes.visualgrid.model.ScreenOrientation;
+import com.applitools.eyes.visualgrid.model.*;
 import com.applitools.eyes.visualgrid.services.RunnerOptions;
 import com.applitools.eyes.visualgrid.services.VisualGridRunner;
 import org.openqa.selenium.By;
@@ -34,6 +31,7 @@ public class AcmeBankTests {
     private void setup(){
         if(BATCH == null) {
             BATCH = new BatchInfo("Selenium Java Basic Quickstart");
+            BATCH.addProperty("AppVersion", "1.0.1");
         }
 
         if(runner == null){
@@ -56,7 +54,6 @@ public class AcmeBankTests {
         Configuration config = eyes.getConfiguration();
         config.setServerUrl("https://eyesapi.applitools.com");
         config.setApiKey(System.getenv("APPLITOOLS_API_KEY"));
-        config.setMatchLevel(MatchLevel.DYNAMIC);
         config.setUseDom(true);
         config.setSendDom(true);
         config.setStitchMode(StitchMode.CSS);
@@ -67,7 +64,8 @@ public class AcmeBankTests {
                     new DesktopBrowserInfo(1024, 768, BrowserType.FIREFOX),
                     new DesktopBrowserInfo(1024, 768, BrowserType.SAFARI),
                     new ChromeEmulationInfo(DeviceName.Pixel_2, ScreenOrientation.PORTRAIT),
-                    new ChromeEmulationInfo(DeviceName.Nexus_10, ScreenOrientation.LANDSCAPE)
+                    new ChromeEmulationInfo(DeviceName.Nexus_10, ScreenOrientation.LANDSCAPE),
+                    new IosDeviceInfo(IosDeviceName.iPhone_15, ScreenOrientation.PORTRAIT)
             );
             config.setLayoutBreakpoints(true);
         }
@@ -172,14 +170,58 @@ public class AcmeBankTests {
             eyes.check(
                     Target.window().fully().withName("Main page").waitBeforeCapture(2000));
 
-            eyes.check(
-                    Target.window().dynamic(By.cssSelector(".dashboardOverview_accountBalances__3TUPB"), DynamicTextType.TextField,
-                    DynamicTextType.Number,
-                    DynamicTextType.Email,
-                    DynamicTextType.Date,
-                    DynamicTextType.Link,
-                    DynamicTextType.Currency)
+//            eyes.check(
+//                    Target.window().dynamic(By.cssSelector(".dashboardOverview_accountBalances__3TUPB"), DynamicTextType.TextField,
+//                    DynamicTextType.Number,
+//                    DynamicTextType.Email,
+//                    DynamicTextType.Date,
+//                    DynamicTextType.Link,
+//                    DynamicTextType.Currency)
+//
+//            );
 
+            // End Applitools Visual AI Test
+            eyes.closeAsync();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            if (eyes != null)
+                eyes.abortAsync();
+        } finally {
+            if (driver != null)
+                driver.quit();
+        }
+    }
+
+    private void testAcmeBankABPage(){
+
+        Eyes eyes = null;
+        WebDriver driver = null;
+        boolean siteVersionA = true;
+
+        try {
+            eyes = getEyes();
+            driver = getDriver();
+
+            if(siteVersionA){
+                driver.get("https://demo.applitools.com/app.html");
+                eyes.addProperty("SiteVersion", "A");
+            } else {
+                driver.get("https://sandbox.applitools.com/bank/dashboard");
+                eyes.addProperty("SiteVersion", "B");
+            }
+
+            // Start Applitools Visual AI Test
+            eyes.open(
+                    driver,
+                    "ACME Bank",
+                    new Object(){}.getClass().getEnclosingMethod().getName(),
+                    new RectangleSize(1200, 600)
+            );
+
+            // Full Page - Visual AI Assertion
+            eyes.check(
+                    Target.window().fully().withName("Main page")
             );
 
             // End Applitools Visual AI Test
@@ -335,8 +377,9 @@ public class AcmeBankTests {
         try{
             acmeBankTests.setup();
 //            acmeBankTests.testAcmeBankPage();
-            acmeBankTests.testAcmeBankLayout();
+//            acmeBankTests.testAcmeBankLayout();
 //            acmeBankTests.testPrimerPrimitivesReadMe();
+            acmeBankTests.testAcmeBankABPage();
 
             if(USE_SELF_HEALING_EXECUTION_CLOUD) {
                 acmeBankTests.testAcmeBankSelfHealing();
