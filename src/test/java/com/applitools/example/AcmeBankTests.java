@@ -75,7 +75,7 @@ public class AcmeBankTests {
     }
 
     private WebDriver getDriver() throws MalformedURLException {
-        WebDriverManager.chromedriver().clearDriverCache().setup();
+//        WebDriverManager.chromedriver().clearDriverCache().setup();
         WebDriver driver = null;
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-gpu");
