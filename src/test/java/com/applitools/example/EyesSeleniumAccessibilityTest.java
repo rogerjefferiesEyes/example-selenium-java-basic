@@ -25,14 +25,14 @@ public class EyesSeleniumAccessibilityTest {
     private static final BatchInfo BATCH = new BatchInfo("Selenium Java Basic - Accessibility");
     private static final boolean USE_ULTRAFAST_GRID = true;
 
-    private static EyesRunner runner = null;
+    private EyesRunner runner = null;
     private Eyes eyes = null;
     private WebDriver driver = null;
 
     @BeforeEach
     public void setUp(){
         Configuration config = new Configuration();
-//        config.setApiKey(System.getenv("APPLITOOLS_API_KEY"));
+        config.setApiKey(System.getenv("APPLITOOLS_API_KEY"));
         config.setBatch(BATCH);
         config.setStitchMode(StitchMode.CSS);
 
