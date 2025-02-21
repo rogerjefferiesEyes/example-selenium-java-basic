@@ -70,6 +70,7 @@ public class AcmeBankTests {
             );
             config.setLayoutBreakpoints(true);
         }
+
 //        config.setBranchName("rogerjefferiesEyes/example-selenium-java-basic/main");
 //        config.setBaselineBranchName("rogerjefferiesEyes/example-selenium-java-basic/main");
         eyes.setConfiguration(config);
