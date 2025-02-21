@@ -5,6 +5,7 @@ import com.applitools.eyes.selenium.fluent.Target;
 import com.applitools.eyes.visualgrid.model.*;
 import com.applitools.eyes.visualgrid.services.RunnerOptions;
 import com.applitools.eyes.visualgrid.services.VisualGridRunner;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -74,6 +75,7 @@ public class AcmeBankTests {
     }
 
     private WebDriver getDriver() throws MalformedURLException {
+        WebDriverManager.chromedriver().clearDriverCache().setup();
         WebDriver driver = null;
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-gpu");
