@@ -32,7 +32,7 @@ public class EyesSeleniumAccessibilityTest {
     @BeforeEach
     public void setUp(){
         Configuration config = new Configuration();
-        config.setApiKey(System.getenv("APPLITOOLS_API_KEY"));
+//        config.setApiKey(System.getenv("APPLITOOLS_API_KEY"));
         config.setBatch(BATCH);
         config.setStitchMode(StitchMode.CSS);
 
