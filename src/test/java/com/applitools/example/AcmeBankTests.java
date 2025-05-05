@@ -55,6 +55,7 @@ public class AcmeBankTests {
         Configuration config = eyes.getConfiguration();
         config.setServerUrl("https://eyesapi.applitools.com");
         config.setApiKey(System.getenv("APPLITOOLS_API_KEY"));
+        config.setEnablePatterns(true);
         config.setUseDom(true);
         config.setSendDom(true);
         config.setStitchMode(StitchMode.CSS);
@@ -124,7 +125,7 @@ public class AcmeBankTests {
 
             // Full Page - Visual AI Assertion
             eyes.check(
-                    Target.window().fully().withName("Main page")
+                    Target.window().fully().withName("Main page").stitchMode(StitchMode.CSS)
             );
 
             // End Applitools Visual AI Test
@@ -171,16 +172,6 @@ public class AcmeBankTests {
             eyes.check(
                     Target.window().fully().withName("Main page").waitBeforeCapture(2000));
 
-//            eyes.check(
-//                    Target.window().dynamic(By.cssSelector(".dashboardOverview_accountBalances__3TUPB"), DynamicTextType.TextField,
-//                    DynamicTextType.Number,
-//                    DynamicTextType.Email,
-//                    DynamicTextType.Date,
-//                    DynamicTextType.Link,
-//                    DynamicTextType.Currency)
-//
-//            );
-
             // End Applitools Visual AI Test
             eyes.closeAsync();
         }
@@ -198,7 +189,7 @@ public class AcmeBankTests {
 
         Eyes eyes = null;
         WebDriver driver = null;
-        boolean siteVersionA = true;
+        boolean siteVersionA = false;
 
         try {
             eyes = getEyes();
@@ -377,10 +368,10 @@ public class AcmeBankTests {
         AcmeBankTests acmeBankTests = new AcmeBankTests();
         try{
             acmeBankTests.setup();
-//            acmeBankTests.testAcmeBankPage();
+            acmeBankTests.testAcmeBankPage();
 //            acmeBankTests.testAcmeBankLayout();
 //            acmeBankTests.testPrimerPrimitivesReadMe();
-            acmeBankTests.testAcmeBankABPage();
+//            acmeBankTests.testAcmeBankABPage();
 
             if(USE_SELF_HEALING_EXECUTION_CLOUD) {
                 acmeBankTests.testAcmeBankSelfHealing();
@@ -393,7 +384,6 @@ public class AcmeBankTests {
             acmeBankTests.tearDown();
             System.exit(0);
         }
-
 
     }
 }
