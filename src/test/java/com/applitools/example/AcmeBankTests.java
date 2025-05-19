@@ -24,7 +24,7 @@ public class AcmeBankTests {
     private static BatchInfo BATCH;
     private static EyesRunner runner;
 
-    private static final boolean USE_ULTRAFAST_GRID = false;
+    private static final boolean USE_ULTRAFAST_GRID = true;
 
     private static final boolean USE_SELF_HEALING_EXECUTION_CLOUD = false;
 
@@ -249,7 +249,7 @@ public class AcmeBankTests {
             driver.get("http://127.0.0.1:8081/");
 
             // Full Page - Visual AI Assertion
-            eyes.check(Target.window().fully().matchLevel(MatchLevel.LAYOUT));
+            eyes.check(Target.window().fully().matchLevel(MatchLevel.STRICT).exact());
 
             // End Applitools Visual AI Test
             eyes.closeAsync();
@@ -368,9 +368,9 @@ public class AcmeBankTests {
         AcmeBankTests acmeBankTests = new AcmeBankTests();
         try{
             acmeBankTests.setup();
-            acmeBankTests.testAcmeBankPage();
+//            acmeBankTests.testAcmeBankPage();
 //            acmeBankTests.testAcmeBankLayout();
-//            acmeBankTests.testPrimerPrimitivesReadMe();
+            acmeBankTests.testPrimerPrimitivesReadMe();
 //            acmeBankTests.testAcmeBankABPage();
 
             if(USE_SELF_HEALING_EXECUTION_CLOUD) {
