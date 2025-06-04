@@ -24,7 +24,7 @@ public class AcmeBankTests {
     private static BatchInfo BATCH;
     private static EyesRunner runner;
 
-    private static final boolean USE_ULTRAFAST_GRID = false;
+    private static final boolean USE_ULTRAFAST_GRID = true;
 
     private static final boolean USE_SELF_HEALING_EXECUTION_CLOUD = false;
 
@@ -55,6 +55,7 @@ public class AcmeBankTests {
         Configuration config = eyes.getConfiguration();
         config.setServerUrl("https://eyesapi.applitools.com");
         config.setApiKey(System.getenv("APPLITOOLS_API_KEY"));
+        config.setEnablePatterns(true);
         config.setUseDom(true);
         config.setSendDom(true);
         config.setStitchMode(StitchMode.CSS);
@@ -75,13 +76,12 @@ public class AcmeBankTests {
     }
 
     private WebDriver getDriver() throws MalformedURLException {
-
         WebDriver driver = null;
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-gpu");
         String headless = System.getenv("HEADLESS");
         if(headless != null || USE_ULTRAFAST_GRID) {
-            options.addArguments("--headless");
+            options.addArguments("--headless=new");
         }
         if(USE_SELF_HEALING_EXECUTION_CLOUD){
             DesiredCapabilities caps = new DesiredCapabilities();
@@ -125,7 +125,7 @@ public class AcmeBankTests {
 
             // Full Page - Visual AI Assertion
             eyes.check(
-                    Target.window().fully().withName("Main page")
+                    Target.window().fully().withName("Main page").stitchMode(StitchMode.CSS)
             );
 
             // End Applitools Visual AI Test
@@ -172,16 +172,6 @@ public class AcmeBankTests {
             eyes.check(
                     Target.window().fully().withName("Main page").waitBeforeCapture(2000));
 
-//            eyes.check(
-//                    Target.window().dynamic(By.cssSelector(".dashboardOverview_accountBalances__3TUPB"), DynamicTextType.TextField,
-//                    DynamicTextType.Number,
-//                    DynamicTextType.Email,
-//                    DynamicTextType.Date,
-//                    DynamicTextType.Link,
-//                    DynamicTextType.Currency)
-//
-//            );
-
             // End Applitools Visual AI Test
             eyes.closeAsync();
         }
@@ -199,7 +189,7 @@ public class AcmeBankTests {
 
         Eyes eyes = null;
         WebDriver driver = null;
-        boolean siteVersionA = true;
+        boolean siteVersionA = false;
 
         try {
             eyes = getEyes();
@@ -259,7 +249,7 @@ public class AcmeBankTests {
             driver.get("http://127.0.0.1:8081/");
 
             // Full Page - Visual AI Assertion
-            eyes.check(Target.window().fully().matchLevel(MatchLevel.LAYOUT));
+            eyes.check(Target.window().fully().matchLevel(MatchLevel.STRICT).exact());
 
             // End Applitools Visual AI Test
             eyes.closeAsync();
@@ -378,10 +368,10 @@ public class AcmeBankTests {
         AcmeBankTests acmeBankTests = new AcmeBankTests();
         try{
             acmeBankTests.setup();
-//            acmeBankTests.testAcmeBankPage();
+            acmeBankTests.testAcmeBankPage();
 //            acmeBankTests.testAcmeBankLayout();
 //            acmeBankTests.testPrimerPrimitivesReadMe();
-            acmeBankTests.testAcmeBankABPage();
+//            acmeBankTests.testAcmeBankABPage();
 
             if(USE_SELF_HEALING_EXECUTION_CLOUD) {
                 acmeBankTests.testAcmeBankSelfHealing();
@@ -394,7 +384,5 @@ public class AcmeBankTests {
             acmeBankTests.tearDown();
             System.exit(0);
         }
-
-
     }
 }
